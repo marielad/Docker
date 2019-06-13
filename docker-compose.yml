@@ -16,16 +16,17 @@ services: # declarion de los servicios/contenedores a usar
     depends_on: # dependencia de este contenedor
       - db # contenedor del que depende
     image: wordpress:latest
-    links: # vincular contenedores para que se puedan "ver"
-      - db # contendor vinculado
     expose:
       - 80
     restart: always
     environment:
       VIRTUAL_HOST: blog.wordpress.com
+      LETSENCRYPT_HOST: blog.wordpress.com #Certificado SSL
       WORDPRESS_DB_HOST: db:3306
       WORDPRESS_DB_USER: ${MYSQL_USER}
       WORDPRESS_DB_PASSWORD: ${MYSQL_PASSWORD}
+      WORDPRESS_DB_NAME: nombreDB
+      WORDPRESS_TABLE_PREFIX: wp_
     container_name: wordpress
 
 volumes:
