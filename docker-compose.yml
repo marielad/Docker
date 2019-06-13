@@ -20,11 +20,7 @@ services: # declarion de los servicios/contenedores a usar
       - db # contendor vinculado
     expose:
       - 80
-    ports:
-      - "80:80" # Puertos del exterior vinculado con el del contenedor
     restart: always
-    volumes:
-      - ./wordpress:/var/www/html
     environment:
       VIRTUAL_HOST: blog.wordpress.com
       WORDPRESS_DB_HOST: db:3306
@@ -40,11 +36,7 @@ services: # declarion de los servicios/contenedores a usar
       - db # contendor vinculado
     expose:
       - 80
-    ports:
-      - "80:80" # Puertos del exterior vinculado con el del contenedor
     restart: always
-    volumes:
-      - ./wordpress:/var/www/html
     environment:
       VIRTUAL_HOST: blog.wordpress.com
       WORDPRESS_DB_HOST: db:3306
