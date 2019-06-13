@@ -1,0 +1,61 @@
+version: '3.1' # version del script
+services: # declarion de los servicios/contenedores a usar
+  db: # declaracion del contendor mysql
+    image: mysql:5.7 # imagen a usar
+    volumes: # volumens a vincular
+      - "./.dbdata/db:/var/lib/mysql"
+    restart: always # reiniciar automático y arranque automático al iniciar docker
+    environment: # variables de entorno
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    container_name: wordpress_db
+
+  wordpress_1:
+    depends_on: # dependencia de este contenedor
+      - db # contenedor del que depende
+    image: wordpress:latest
+    links: # vincular contenedores para que se puedan "ver"
+      - db # contendor vinculado
+    expose:
+      - 80
+    ports:
+      - "80:80" # Puertos del exterior vinculado con el del contenedor
+    restart: always
+    volumes:
+      - ./wordpress:/var/www/html
+    environment:
+      VIRTUAL_HOST: blog.wordpress.com
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_USER: ${MYSQL_USER}
+      WORDPRESS_DB_PASSWORD: ${MYSQL_PASSWORD}
+    container_name: wordpress_1
+
+    wordpress_2:
+    depends_on: # dependencia de este contenedor
+      - db # contenedor del que depende
+    image: wordpress:latest
+    links: # vincular contenedores para que se puedan "ver"
+      - db # contendor vinculado
+    expose:
+      - 80
+    ports:
+      - "80:80" # Puertos del exterior vinculado con el del contenedor
+    restart: always
+    volumes:
+      - ./wordpress:/var/www/html
+    environment:
+      VIRTUAL_HOST: blog.wordpress.com
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_USER: ${MYSQL_USER}
+      WORDPRESS_DB_PASSWORD: ${MYSQL_PASSWORD}
+    container_name: wordpress_2
+
+volumes:
+    db_data:
+
+networks:
+  default:
+    external:
+      name: nginx-proxy
