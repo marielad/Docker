@@ -1,29 +1,17 @@
-version: '3.3' # version del script
-services: # declarion de los servicios/contenedores a usar
+version: '3.3'
+services: 
     
-  db: # declaracion del contendor mysql
-    image: mariadb # imagen a usar
+  db: 
+    image: mariadb 
     volumes:
        - db_data:/var/lib/mysql/
-    restart: always # reiniciar automático y arranque automático al iniciar docker
-    environment: # variables de entorno
+    restart: always 
+    environment:
       MYSQL_ROOT_PASSWORD: StrongPass
       MYSQL_DATABASE: db
       MYSQL_USER: userdb
       MYSQL_PASSWORD: Pass
     container_name: db
-
-  db2: # declaracion del contendor mysql
-    image: mariadb # imagen a usar
-    volumes:
-       - db_data:/var/lib/mysql/
-    restart: always # reiniciar automático y arranque automático al iniciar docker
-    environment: # variables de entorno
-      MYSQL_ROOT_PASSWORD: StrongPass
-      MYSQL_DATABASE: db2
-      MYSQL_USER: userdb2
-      MYSQL_PASSWORD: Pass
-    container_name: db2
 
   wordpress:
     depends_on: 
@@ -32,7 +20,7 @@ services: # declarion de los servicios/contenedores a usar
     expose:
       - 80
     volumes:
-      - /wordpress/wp:/var/www/html/
+      - wordpress_files:/var/www/html/
     restart: always
     environment:
       VIRTUAL_HOST: wp.com
@@ -44,25 +32,6 @@ services: # declarion de los servicios/contenedores a usar
       WORDPRESS_TABLE_PREFIX: prefix_
     container_name: wp
 
-  wordpress2:
-    depends_on: 
-      - db2
-    image: wordpress:latest
-    expose:
-      - 80
-    volumes:
-      - /wordpress/wp2:/var/www/html/
-    restart: always
-    environment:
-      VIRTUAL_HOST: wp2.com
-      LETSENCRYPT_HOST: wp2.com
-      WORDPRESS_DB_HOST: db2:3306
-      WORDPRESS_DB_USER: userdb2
-      WORDPRESS_DB_PASSWORD: Pass
-      WORDPRESS_DB_NAME: db2
-      WORDPRESS_TABLE_PREFIX: prefix_
-    container_name: wp2
-
 volumes:
   wordpress_files: 
   db_data: 
@@ -70,4 +39,4 @@ volumes:
 networks:
   default:
     external:
-      name: dockerwp
+      name: nginx-proxy
